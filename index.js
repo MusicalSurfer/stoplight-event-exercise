@@ -1,42 +1,60 @@
 (function () {
 	'use strict';
+	const stopLightObj = {
+		lights: {
+			stopButton: document.querySelector('#stopLight'),
+			slowButton: document.querySelector('#slowLight'),
+			goButton: document.querySelector('#goLight')
+		},
+		buttons: {
+			stopButton: document.querySelector('#stopButton'),
+			slowButton: document.querySelector('#slowButton'),
+			goButton: document.querySelector('#goButton')
+		},
+		classes: {
+			stopButton: 'stop',
+			slowButton: 'slow',
+			goButton: 'go',
+		},
 
-	// Create references to lights.
-	const stopLight = document.querySelector('#stopLight');
-	const slowLight = document.querySelector('#slowLight');
-	const goLight = document.querySelector('#goLight');
-	// Create references to buttons.
-	const stopButton = document.querySelector('#stopButton');
-	const slowButton = document.querySelector('#slowButton');
-	const goButton = document.querySelector('#goButton');
-	// Create lists for buttons.
-	const buttonList = [stopButton, slowButton, goButton];
+		// Event handler to apply changes to lights when button is clicked.
+		eventHandler: (buttonKey) => {
+			let lightObj = stopLightObj.lights;
+			let classObj = stopLightObj.classes;
 
-	// Function that adds event listeners to toggle css class on click.
-	const addToggleLights = (elemList) => {
-		const lightList = [stopLight, slowLight, goLight];
-		const classList = ['stop', 'slow', 'go'];
-		// For every element in the list
-		for (let i = 0; i < elemList.length; i++) {
-			// Add a click event listener that toggles css class from classList.
-			elemList[i].addEventListener('click', () => {
-				lightList[i].classList.toggle(classList[i]);
-			});
+			lightObj[buttonKey].classList.toggle(classObj[buttonKey]);
+
+			const hasBeenCLicked = lightObj[buttonKey].classList.contains(classObj[buttonKey]);
+			hasBeenCLicked ? console.log(stopLightObj.buttons[buttonKey].textContent + ' bulb on.') : console.log(stopLightObj.buttons[buttonKey].textContent + ' bulb off.')
+		},
+
+		// Function that adds event listeners to toggle css class on click.
+		addToggleLights: () => {
+			let buttonObj = stopLightObj.buttons;
+
+			for (let buttonKey in buttonObj) {
+				// Add a click event listener that toggles css class from classList.
+				buttonObj[buttonKey].addEventListener('click', () => stopLightObj.eventHandler(buttonKey));
+			}
+		},
+
+		// Function to add pointer event listeners to log to console when the mouse is over a button.
+		mouseLogToConsole: (buttonObjs) => {
+
+			// For every button, add a pointerover and pointerout event listener and log it.
+			for (let button in buttonObjs) {
+				buttonObjs[button].addEventListener('pointerover', () => {
+					console.log('Entered ' + buttonObjs[button].textContent + ' button.')
+				});
+				buttonObjs[button].addEventListener('pointerout', () => {
+					console.log('Left ' + buttonObjs[button].textContent + ' button.')
+				});
+			}
 		}
-	}
-	// Function to add pointer event listeners to log to console when the mouse is over a button.
-	const mouseLogToConsole = (elemList) => {
-		// For every button, add a pointerover and pointerout event listener and log it.
-		for (let i = 0; i < elemList.length; i++) {
-			elemList[i].addEventListener('pointerover', () => {
-				console.log('Entered ' + elemList[i].textContent + ' button.')
-			});
-			elemList[i].addEventListener('pointerout', () => {
-				console.log('Left ' + elemList[i].textContent + ' button.')
-			});
-		}
-	}
+
+	};
+
 	// Invoke functions.
-	addToggleLights(buttonList);
-	mouseLogToConsole(buttonList);
+	stopLightObj.addToggleLights();
+	stopLightObj.mouseLogToConsole(stopLightObj.buttons);
 })();
